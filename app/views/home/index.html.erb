@@ -2,13 +2,13 @@
   <ul>
     <li>
       <%= form_with url: destroy_user_session_path, method: :delete do |f| %>
-        <%= f.submit value: "Logout" %>
+        <%= f.submit value: "Logout", class: 'link' %>
       <% end %>
     </li>
   </ul>
 <% else %>
   <ul>
-    <li><%= link_to "Log in", new_user_session_path %></li>
-    <li><%= link_to "Sign up", new_user_registration_path %></li>
+    <li><%= link_to "Log in", new_user_session_path, class: 'link' %></li>
+    <li><%= link_to "Sign up", new_user_registration_path, class: 'link' %></li>
   </ul>
 <% end %>

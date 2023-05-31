@@ -9,12 +9,21 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .link {
+          @apply font-semibold leading-6 text-indigo-600 hover:text-indigo-500 cursor-pointer;
+        }
+      }
+    </style>
   </head>
 
   <body>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
 
-    <%= yield %>
+    <div class="p-4">
+      <%= yield %>
+    </div>
   </body>
 </html>
