@@ -1,0 +1,14 @@
+<% if user_signed_in? %>
+  <ul>
+    <li>
+      <%= form_with url: destroy_user_session_path, method: :delete do |f| %>
+        <%= f.submit value: "Logout" %>
+      <% end %>
+    </li>
+  </ul>
+<% else %>
+  <ul>
+    <li><%= link_to "Log in", new_user_session_path %></li>
+    <li><%= link_to "Sign up", new_user_registration_path %></li>
+  </ul>
+<% end %>
