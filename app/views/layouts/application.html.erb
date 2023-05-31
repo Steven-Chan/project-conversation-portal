@@ -23,8 +23,12 @@
   </head>
 
   <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <% unless notice.nil? %>
+      <p class="block p-4 bg-green-600 text-gray"><%= notice %></p>
+    <% end %>
+    <% unless alert.nil? %>
+      <p class="block p-4 bg-red-500 text-white"><%= alert %></p>
+    <% end %>
 
     <div class="p-4">
       <%= yield %>
