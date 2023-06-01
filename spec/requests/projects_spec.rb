@@ -83,5 +83,12 @@ RSpec.describe "Projects", type: :request do
       get "/projects/#{project.id}"
       expect(response.status).to eq(200)
     end
+
+    it "redirect to project list page for invalid project id" do
+      sign_in_as(user)
+      get "/projects/whatever"
+      expect(response.status).to eq(302)
+      expect(response.header.fetch('Location')).to eq('http://www.example.com/projects')
+    end
   end
 end
