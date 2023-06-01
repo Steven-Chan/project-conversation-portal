@@ -48,6 +48,25 @@ RSpec.describe "Comments", type: :request do
         expect { action }.to change { project.comments.count }.by(1)
       end
     end
+
+    describe "cannot create comment with empty content" do
+      before { sign_in_as(user) }
+      let(:action) do
+        post "/projects/#{project.id}/comments", params: {
+          comment: {
+            content: ""
+          }
+        }
+      end
+
+      it "redirect to project page" do
+        action
+        expect(response.status).to eq(422)
+      end
+
+      it "comment count not changed" do
+        expect { action }.to change { Comment.count }.by(0)
+      end
     end
   end
 end
