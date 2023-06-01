@@ -1,6 +1,8 @@
 class ProjectsController < ApplicationController
   before_action :authenticate_user!
 
+  before_action :set_project, only: [:show]
+
   def index
     @projects = Project.all
   end
@@ -13,16 +15,22 @@ class ProjectsController < ApplicationController
     @project = Project.new(project_params)
     @project.save.tap do |successful|
       if successful
-        # navigate to project show page
+        redirect_to project_path(@project.id), notice: "Project has been created."
       else
         render :new, status: :unprocessable_entity
       end
     end
   end
 
+  def show; end
+
   private
 
   def project_params
     params.require(:project).permit(:name, :description, :status)
+  end
+
+  def set_project
+    @project = Project.find(params[:id])
   end
 end
