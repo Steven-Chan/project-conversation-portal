@@ -1,3 +1,27 @@
 <% if activity.is_a?(Comment) %>
   <%= render "comments/comment", comment: activity %>
+<% elsif activity.is_a?(ProjectCreatedEvent) %>
+  <div class="px-2">
+    <p class="text-xs text-gray-500">
+      <span class="font-semibold"><%= activity.created_by.email %></span>
+      has created this project
+      <%= time_ago_in_words(activity.created_at) %> ago
+    </p>
+  </div>
+<% elsif activity.is_a?(ProjectUpdatedEvent) %>
+  <div class="px-2">
+    <p class="text-xs text-gray-500">
+      <span class="font-semibold"><%= activity.created_by.email %></span>
+      has updated this project
+      <%= time_ago_in_words(activity.created_at) %> ago
+    </p>
+  </div>
+<% elsif activity.is_a?(ProjectStatusChangedEvent) %>
+  <div class="px-2">
+    <p class="text-xs text-gray-500">
+      <span class="font-semibold"><%= activity.created_by.email %></span>
+      has updated the status
+      <%= time_ago_in_words(activity.created_at) %> ago
+    </p>
+  </div>
 <% end %>

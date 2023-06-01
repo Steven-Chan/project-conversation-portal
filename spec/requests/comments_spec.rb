@@ -45,7 +45,7 @@ RSpec.describe "Comments", type: :request do
       end
 
       it "add a new comment to the project" do
-        expect { action }.to change { project.comments.count }.by(1)
+        expect { action }.to change { project.activities.count }.by(1)
       end
     end
 

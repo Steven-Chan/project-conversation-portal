@@ -1,0 +1,2 @@
+class ProjectUpdatedEvent < ProjectActivity
+end

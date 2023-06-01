@@ -38,9 +38,9 @@ RSpec.describe "Projects", type: :request do
       expect(response.header.fetch('Location')).to eq('http://www.example.com/users/sign_in')
     end
 
-    it "create project successfully" do
-      sign_in_as(user)
-      expect do
+    describe "create project successfully" do
+      before { sign_in_as(user) }
+      let(:action) do
         post "/projects", params: {
           project: {
             name: "Project A",
@@ -48,12 +48,34 @@ RSpec.describe "Projects", type: :request do
             status: :pending
           }
         }
-      end.to change { Project.count }.by(1)
-      project = Project.order(created_at: :desc).first
-      expect(response.status).to eq(302)
-      expect(response.header.fetch('Location')).to eq("http://www.example.com/projects/#{project.id}")
-      expect(project.created_by_id).to eq(user.id)
-      expect(project.updated_by_id).to eq(user.id)
+      end
+
+      it "add project count" do
+        expect { action }.to change { Project.count }.by(1)
+      end
+
+      it "add new project activity" do
+        expect { action }.to change { ProjectActivity.count }.by(1)
+        activity = ProjectActivity.order(created_at: :desc).first
+        expect(activity).to be_a(ProjectCreatedEvent)
+
+        project = Project.order(created_at: :desc).first
+        expect(activity.project.id).to eq(project.id)
+      end
+
+      it "redirect to project page" do
+        action
+        project = Project.order(created_at: :desc).first
+        expect(response.status).to eq(302)
+        expect(response.header.fetch('Location')).to eq("http://www.example.com/projects/#{project.id}")
+      end
+
+      it "has correct create and update user" do
+        action
+        project = Project.order(created_at: :desc).first
+        expect(project.created_by_id).to eq(user.id)
+        expect(project.updated_by_id).to eq(user.id)
+      end
     end
 
     it "cannot create project with empty name" do
@@ -126,9 +148,50 @@ RSpec.describe "Projects", type: :request do
       expect(response.header.fetch('Location')).to eq('http://www.example.com/users/sign_in')
     end
 
-    it "update project successfully" do
-      sign_in_as(user)
-      expect do
+    describe "update project successfully" do
+      before { sign_in_as(user) }
+      let(:action) do
+        put "/projects/#{project.id}", params: {
+          project: {
+            name: "Project A",
+            description: "ABC",
+            status: :pending
+          }
+        }
+      end
+
+      it "does not add new project" do
+        expect { action }.to change { Project.count }.by(0)
+      end
+
+      it "add new project activity" do
+        expect { action }.to change { ProjectActivity.count }.by(1)
+        activity = ProjectActivity.order(created_at: :desc).first
+        expect(activity).to be_a(ProjectUpdatedEvent)
+        expect(activity.project_id).to eq(project.id)
+      end
+
+      it "redirect to project detail page" do
+        action
+        project.reload
+        expect(response.status).to eq(302)
+        expect(response.header.fetch('Location')).to eq("http://www.example.com/projects/#{project.id}")
+      end
+
+      it "update the attributes correctly" do
+        action
+        project.reload
+        expect(project.name).to eq("Project A")
+        expect(project.description).to eq("ABC")
+        expect(project.status).to eq("pending")
+        expect(project.created_by_id).to eq(user.id)
+        expect(project.updated_by_id).to eq(user.id)
+      end
+    end
+
+    describe "update project status" do
+      before { sign_in_as(user) }
+      let(:action) do
         put "/projects/#{project.id}", params: {
           project: {
             name: "Project A",
@@ -136,15 +199,19 @@ RSpec.describe "Projects", type: :request do
             status: :wip
           }
         }
-      end.to change { Project.count }.by(0)
-      project = Project.order(created_at: :desc).first
-      expect(response.status).to eq(302)
-      expect(response.header.fetch('Location')).to eq("http://www.example.com/projects/#{project.id}")
-      expect(project.name).to eq("Project A")
-      expect(project.description).to eq("ABC")
-      expect(project.status).to eq("wip")
-      expect(project.created_by_id).to eq(user.id)
-      expect(project.updated_by_id).to eq(user.id)
+      end
+
+      it "adds two activities" do
+        expect { action }.to change { ProjectActivity.count }.by(2)
+      end
+
+      it "add one update event" do
+        expect { action }.to change { ProjectUpdatedEvent.count }.by(1)
+      end
+
+      it "add one status change event" do
+        expect { action }.to change { ProjectStatusChangedEvent.count }.by(1)
+      end
     end
 
     it "update project by another user" do
