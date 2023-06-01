@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Comment < ProjectActivity
   validates :content, presence: true
 

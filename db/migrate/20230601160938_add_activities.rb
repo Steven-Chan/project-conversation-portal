@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddActivities < ActiveRecord::Migration[7.0]
   def change
     rename_table :comments, :project_activities

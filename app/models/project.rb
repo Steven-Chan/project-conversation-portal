@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class Project < ApplicationRecord
   validates :name, presence: true
 
-  enum status: [:pending, :wip, :done]
+  enum status: %i[pending wip done]
 
   has_many :project_activities, dependent: :destroy
   alias_attribute :activities, :project_activities

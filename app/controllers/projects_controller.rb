@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class ProjectsController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :set_project, only: [:show, :edit, :update]
+  before_action :set_project, only: %i[show edit update]
 
   def index
     @projects = Project.all
@@ -20,7 +22,7 @@ class ProjectsController < ApplicationController
 
       create_project_event!(ProjectCreatedEvent)
 
-      redirect_to project_path(@project.id), notice: "Project has been created."
+      redirect_to project_path(@project.id), notice: 'Project has been created.'
     rescue StandardError
       render :new, status: :unprocessable_entity
     end
@@ -36,15 +38,10 @@ class ProjectsController < ApplicationController
       @project.updated_by = current_user
       @project.save!
 
-      if @project.previous_changes.present?
-        create_project_event!(ProjectUpdatedEvent)
-      end
+      create_project_event!(ProjectUpdatedEvent) if @project.previous_changes.present?
+      create_project_event!(ProjectStatusChangedEvent) if @project.previous_changes.key?(:status)
 
-      if @project.previous_changes.has_key?(:status)
-        create_project_event!(ProjectStatusChangedEvent)
-      end
-
-      redirect_to project_path(@project.id), notice: "Project has been updated."
+      redirect_to project_path(@project.id), notice: 'Project has been updated.'
     end
   rescue StandardError
     render :new, status: :unprocessable_entity
@@ -59,7 +56,7 @@ class ProjectsController < ApplicationController
   def set_project
     @project = Project.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to projects_path, alert: "Project not found."
+    redirect_to projects_path, alert: 'Project not found.'
   end
 
   def create_project_event!(klass)

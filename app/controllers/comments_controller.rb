@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CommentsController < ApplicationController
   before_action :authenticate_user!
 
@@ -26,6 +28,6 @@ class CommentsController < ApplicationController
   def set_project
     @project = Project.find(params[:project_id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to projects_path, alert: "Project not found."
+    redirect_to projects_path, alert: 'Project not found.'
   end
 end

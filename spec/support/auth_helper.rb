@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AuthHelper
   def sign_in_as(user)
     post user_session_path, params: {
