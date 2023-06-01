@@ -12,4 +12,14 @@ RSpec.describe Project, type: :model do
     expect(project.pending?).to be(false)
     expect(project.wip?).to be(true)
   end
+
+  it "name cannot be empty" do
+    project.name = ""
+    expect(project.save).to be(false)
+  end
+
+  it "name cannot be nil" do
+    project.name = nil
+    expect(project.save).to be(false)
+  end
 end

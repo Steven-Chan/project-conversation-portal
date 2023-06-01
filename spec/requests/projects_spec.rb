@@ -30,4 +30,39 @@ RSpec.describe "Projects", type: :request do
       expect(response.status).to eq(200)
     end
   end
+
+  describe "POST /projects" do
+    it "cannot create project if not looged in" do
+      post "/projects"
+      expect(response.status).to eq(302)
+      expect(response.header.fetch('Location')).to eq('http://www.example.com/users/sign_in')
+    end
+
+    it "create project successfully" do
+      sign_in_as(user)
+      expect do
+        post "/projects", params: {
+          project: {
+            name: "Project A",
+            description: "ABC",
+            status: :pending
+          }
+        }
+      end.to change { Project.count }.by(1)
+    end
+
+    it "cannot create project with empty name" do
+      sign_in_as(user)
+      expect do
+        post "/projects", params: {
+          project: {
+            name: "",
+            description: "ABC",
+            status: :pending
+          }
+        }
+      end.to change { Project.count }.by(0)
+      expect(response.status).to eq(422)
+    end
+  end
 end
