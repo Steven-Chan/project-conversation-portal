@@ -5,6 +5,8 @@ class CommentsController < ApplicationController
 
   def create
     @comment = Comment.new(comment_params)
+    @comment.created_by = current_user
+    @comment.updated_by = current_user
     @comment.project = @project
     @comment.save.tap do |successful|
       if successful

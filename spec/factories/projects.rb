@@ -3,5 +3,8 @@ FactoryBot.define do
     name { 'Example' }
     description { 'A brief description of this project.' }
     status { :pending }
+
+    association :created_by, factory: :user
+    association :updated_by, factory: :user
   end
 end

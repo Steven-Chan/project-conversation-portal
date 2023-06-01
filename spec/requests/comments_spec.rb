@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Comments", type: :request do
   describe "POST /projects/{project_id}/comments" do
     let!(:user) { FactoryBot.create(:user) }
-    let!(:project) { FactoryBot.create(:project) }
+    let!(:project) { FactoryBot.create(:project, created_by: user, updated_by: user) }
 
     it "cannot create comment if not looged in" do
       post "/projects/#{project.id}/comments"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_01_111747) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_01_153805) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,7 +19,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_01_111747) do
     t.bigint "project_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "created_by_id"
+    t.bigint "updated_by_id"
+    t.index ["created_by_id"], name: "index_comments_on_created_by_id"
     t.index ["project_id"], name: "index_comments_on_project_id"
+    t.index ["updated_by_id"], name: "index_comments_on_updated_by_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -28,6 +32,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_01_111747) do
     t.integer "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "created_by_id"
+    t.bigint "updated_by_id"
+    t.index ["created_by_id"], name: "index_projects_on_created_by_id"
+    t.index ["updated_by_id"], name: "index_projects_on_updated_by_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -40,4 +48,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_01_111747) do
   end
 
   add_foreign_key "comments", "projects"
+  add_foreign_key "comments", "users", column: "created_by_id"
+  add_foreign_key "comments", "users", column: "updated_by_id"
+  add_foreign_key "projects", "users", column: "created_by_id"
+  add_foreign_key "projects", "users", column: "updated_by_id"
 end

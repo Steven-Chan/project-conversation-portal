@@ -52,6 +52,8 @@ RSpec.describe "Projects", type: :request do
       project = Project.order(created_at: :desc).first
       expect(response.status).to eq(302)
       expect(response.header.fetch('Location')).to eq("http://www.example.com/projects/#{project.id}")
+      expect(project.created_by_id).to eq(user.id)
+      expect(project.updated_by_id).to eq(user.id)
     end
 
     it "cannot create project with empty name" do
@@ -70,7 +72,7 @@ RSpec.describe "Projects", type: :request do
   end
 
   describe "GET /projects/{id}" do
-    let!(:project) { FactoryBot.create(:project) }
+    let!(:project) { FactoryBot.create(:project, created_by: user, updated_by: user) }
 
     it "cannot show project page if not logged in" do
       get "/projects/#{project.id}"
@@ -93,7 +95,7 @@ RSpec.describe "Projects", type: :request do
   end
 
   describe "GET /projects/{id}/edit" do
-    let!(:project) { FactoryBot.create(:project) }
+    let!(:project) { FactoryBot.create(:project, created_by: user, updated_by: user) }
 
     it "cannot show edit project page if not logged in" do
       get "/projects/#{project.id}/edit"
@@ -116,7 +118,7 @@ RSpec.describe "Projects", type: :request do
   end
 
   describe "PUT /projects/{id}" do
-    let!(:project) { FactoryBot.create(:project) }
+    let!(:project) { FactoryBot.create(:project, created_by: user, updated_by: user) }
 
     it "cannot update project if not looged in" do
       put "/projects/#{project.id}"
@@ -141,6 +143,24 @@ RSpec.describe "Projects", type: :request do
       expect(project.name).to eq("Project A")
       expect(project.description).to eq("ABC")
       expect(project.status).to eq("wip")
+      expect(project.created_by_id).to eq(user.id)
+      expect(project.updated_by_id).to eq(user.id)
+    end
+
+    it "update project by another user" do
+      another_user = FactoryBot.create(:user)
+      sign_in_as(another_user)
+      put "/projects/#{project.id}", params: {
+        project: {
+          name: "Project A",
+          description: "ABC",
+          status: :wip
+        }
+      }
+      expect(response.status).to eq(302)
+      project = Project.order(created_at: :desc).first
+      expect(project.created_by_id).to eq(user.id)
+      expect(project.updated_by_id).to eq(another_user.id)
     end
 
     it "cannot update project with empty name" do

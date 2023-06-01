@@ -13,6 +13,8 @@ class ProjectsController < ApplicationController
 
   def create
     @project = Project.new(project_params)
+    @project.created_by = current_user
+    @project.updated_by = current_user
     @project.save.tap do |successful|
       if successful
         redirect_to project_path(@project.id), notice: "Project has been created."
@@ -28,6 +30,7 @@ class ProjectsController < ApplicationController
 
   def update
     @project.assign_attributes(project_params)
+    @project.updated_by = current_user
     @project.save.tap do |successful|
       if successful
         redirect_to project_path(@project.id), notice: "Project has been updated."
