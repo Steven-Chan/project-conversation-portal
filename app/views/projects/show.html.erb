@@ -8,7 +8,7 @@
       <br>
       Last updated at <%= time_ago_in_words(@project.updated_at) %> ago
     </p>
-    <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500"><%= @project.description %></p>
+    <%= simple_format(@project.description, class: "mt-1 max-w-2xl text-sm leading-6 text-gray-500") %>
   </div>
 
   <div class="mt-2">
