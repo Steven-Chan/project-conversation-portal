@@ -91,4 +91,27 @@ RSpec.describe "Projects", type: :request do
       expect(response.header.fetch('Location')).to eq('http://www.example.com/projects')
     end
   end
+
+  describe "GET /projects/{id}/edit" do
+    let!(:project) { FactoryBot.create(:project) }
+
+    it "cannot show edit project page if not logged in" do
+      get "/projects/#{project.id}/edit"
+      expect(response.status).to eq(302)
+      expect(response.header.fetch('Location')).to eq('http://www.example.com/users/sign_in')
+    end
+
+    it "show edit project page" do
+      sign_in_as(user)
+      get "/projects/#{project.id}/edit"
+      expect(response.status).to eq(200)
+    end
+
+    it "redirect to project list page for invalid project id" do
+      sign_in_as(user)
+      get "/projects/whatever/edit"
+      expect(response.status).to eq(302)
+      expect(response.header.fetch('Location')).to eq('http://www.example.com/projects')
+    end
+  end
 end
