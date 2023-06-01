@@ -1,0 +1,9 @@
+<h1 class="text-xl font-semibold leading-7 text-gray-900">Projects</h1>
+
+<ul role="list" class="mt-10 divide-y divide-gray-100">
+  <% @projects.each do |project| %>
+    <li class="py-2 text-gray-900 underline hover:text-gray-600">
+      <%= link_to project.name, project_path(project.id) %>
+    </li>
+  <% end %>
+</ul>
