@@ -69,3 +69,18 @@ A: Users should be able to update a project name and description. And it would b
 
 Q: Do we need to implement live update in this app, i.e. users can see latest update without refreshing the page?
 A: It would be nice to have live update for the page which shows the conversation. And no for other pages.
+
+## Notes
+
+Due to time limitation, not everything has been implemented. These are the possible improvements.
+
+- technical:
+    - refactor tailwind usage and extract common views, so there could be less repetitive classes
+    - fix all the rubocop warnings and errors
+    - introduce service layer to better encapsulate business logic in controller, because now it is doing multiple actions in some of the controller actions
+- features:
+    - support pagination or infinite scroll on project activities
+    - support filtering and sorting on project list and activity list
+    - support live update in project activities
+    - support comment update, and showing the histories
+    - support soft delete on projects and comments
