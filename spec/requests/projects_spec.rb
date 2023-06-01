@@ -16,4 +16,18 @@ RSpec.describe "Projects", type: :request do
       expect(response.status).to eq(200)
     end
   end
+
+  describe "GET /projects/new" do
+    it "cannot show create project page if not logged in" do
+      get "/projects/new"
+      expect(response.status).to eq(302)
+      expect(response.header.fetch('Location')).to eq('http://www.example.com/users/sign_in')
+    end
+
+    it "show create project page" do
+      sign_in_as(user)
+      get "/projects/new"
+      expect(response.status).to eq(200)
+    end
+  end
 end
