@@ -1,5 +1,6 @@
 <% if user_signed_in? %>
   <ul>
+    <li><%= link_to "Show projects", projects_path, class: 'link' %></li>
     <li>
       <%= form_with url: destroy_user_session_path, method: :delete do |f| %>
         <%= f.submit value: "Logout", class: 'link' %>
