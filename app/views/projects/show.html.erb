@@ -19,13 +19,13 @@
   </div>
 
   <div class="mt-6">
-    <h3>Comments</h3>
+    <h3>Activities</h3>
     <div class="space-y-2">
-      <% if @project.comments.count == 0 %>
-        <p class="text-xs text-gray-500 italic">No comments yet.</p>
+      <% if @project.activities.count == 0 %>
+        <p class="text-xs text-gray-500 italic">No activities yet.</p>
       <% else %>
-        <% @project.comments.each do |comment| %>
-          <%= render "comments/comment", comment: comment %>
+        <% @project.activities.each do |activity| %>
+          <%= render "activity", activity: activity %>
         <% end %>
       <% end %>
     </div>

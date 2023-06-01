@@ -10,20 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_01_153805) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_01_160938) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "comments", force: :cascade do |t|
+  create_table "project_activities", force: :cascade do |t|
     t.text "content"
     t.bigint "project_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "created_by_id"
     t.bigint "updated_by_id"
-    t.index ["created_by_id"], name: "index_comments_on_created_by_id"
-    t.index ["project_id"], name: "index_comments_on_project_id"
-    t.index ["updated_by_id"], name: "index_comments_on_updated_by_id"
+    t.string "type", null: false
+    t.index ["created_by_id"], name: "index_project_activities_on_created_by_id"
+    t.index ["project_id"], name: "index_project_activities_on_project_id"
+    t.index ["updated_by_id"], name: "index_project_activities_on_updated_by_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -47,9 +48,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_01_153805) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "comments", "projects"
-  add_foreign_key "comments", "users", column: "created_by_id"
-  add_foreign_key "comments", "users", column: "updated_by_id"
+  add_foreign_key "project_activities", "projects"
+  add_foreign_key "project_activities", "users", column: "created_by_id"
+  add_foreign_key "project_activities", "users", column: "updated_by_id"
   add_foreign_key "projects", "users", column: "created_by_id"
   add_foreign_key "projects", "users", column: "updated_by_id"
 end
