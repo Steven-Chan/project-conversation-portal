@@ -1,6 +1,7 @@
 <div>
   <div class="px-4 sm:px-0">
     <h1 class="text-xl font-semibold leading-7 text-gray-900"><%= @project.name %></h1>
+    <%= link_to "Back to list", projects_path, class: "mt-1 text-xs text-gray-900 underline" %>
     <p class="mt-1 max-w-2xl leading-6 text-gray-900"><%= t(@project.status) %></p>
     <p class="mt-1 text-xs text-gray-900">
       Last updated by <%= @project.updated_by.email %>
