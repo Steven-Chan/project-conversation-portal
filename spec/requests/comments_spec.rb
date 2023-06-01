@@ -13,20 +13,41 @@ RSpec.describe "Comments", type: :request do
 
     it "redirect to project list page if project not found" do
       sign_in_as(user)
-      post "/projects/whatever/comments", params: {
-        # TODO
-      }
+      expect do
+        post "/projects/whatever/comments", params: {
+          comment: {
+            content: "Hello"
+          }
+        }
+      end.to change { Comment.count }.by(0)
       expect(response.status).to eq(302)
       expect(response.header.fetch('Location')).to eq("http://www.example.com/projects")
     end
 
-    it "create comment successfully" do
-      sign_in_as(user)
-      post "/projects/#{project.id}/comments", params: {
-        # TODO
-      }
-      expect(response.status).to eq(302)
-      expect(response.header.fetch('Location')).to eq("http://www.example.com/projects/#{project.id}")
+    describe "create comment successfully" do
+      before { sign_in_as(user) }
+      let(:action) do
+        post "/projects/#{project.id}/comments", params: {
+          comment: {
+            content: "Hello"
+          }
+        }
+      end
+
+      it "redirect to project page" do
+        action
+        expect(response.status).to eq(302)
+        expect(response.header.fetch('Location')).to eq("http://www.example.com/projects/#{project.id}")
+      end
+
+      it "create a new comment" do
+        expect { action }.to change { Comment.count }.by(1)
+      end
+
+      it "add a new comment to the project" do
+        expect { action }.to change { project.comments.count }.by(1)
+      end
+    end
     end
   end
 end
