@@ -50,24 +50,37 @@ Run `bundle exec rspec` to run the test cases.
 ## Assumptions
 
 Q: What kind of history do we need to show in this app?
+<br>
 A: Users can leave comment and change status of a project. These are the activities that users could do in a project. Maybe think of a project as a Github issue. The activities would be shown like a timeline, so the user can see who have done what and when.
-
+<br>
+<br>
 Q: Do we need user authentication in this app?
+<br>
 A: Yes. Also, since we are displaying history of the projects and conversations, we also want to show who is doing the actions.
-
+<br>
+<br>
 Q: Do we need any permission control in this app? For example, only some users can change the status of some projects?
+<br>
 A: It would be nice to have, but not necessary.
-
+<br>
+<br>
 Q: What are the possible statues do we have for a project?
+<br>
 A: Pending, WIP and Done.
-
+<br>
+<br>
 Q: What do we need to show for a project, besides status and comments?
+<br>
 A: Name and description. Also, the name of the user who created the project and when it happened.
-
+<br>
+<br>
 Q: Do we allow the user update the project, besides status, and comments?
+<br>
 A: Users should be able to update a project name and description. And it would be nice to have for updating comments.
-
+<br>
+<br>
 Q: Do we need to implement live update in this app, i.e. users can see latest update without refreshing the page?
+<br>
 A: It would be nice to have live update for the page which shows the conversation. And no for other pages.
 
 ## Notes
