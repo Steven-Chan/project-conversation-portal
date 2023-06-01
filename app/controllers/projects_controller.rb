@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :set_project, only: [:show, :edit]
+  before_action :set_project, only: [:show, :edit, :update]
 
   def index
     @projects = Project.all
@@ -25,6 +25,17 @@ class ProjectsController < ApplicationController
   def show; end
 
   def edit; end
+
+  def update
+    @project.assign_attributes(project_params)
+    @project.save.tap do |successful|
+      if successful
+        redirect_to project_path(@project.id), notice: "Project has been updated."
+      else
+        render :new, status: :unprocessable_entity
+      end
+    end
+  end
 
   private
 

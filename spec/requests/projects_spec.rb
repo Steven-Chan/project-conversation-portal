@@ -114,4 +114,49 @@ RSpec.describe "Projects", type: :request do
       expect(response.header.fetch('Location')).to eq('http://www.example.com/projects')
     end
   end
+
+  describe "PUT /projects/{id}" do
+    let!(:project) { FactoryBot.create(:project) }
+
+    it "cannot update project if not looged in" do
+      put "/projects/#{project.id}"
+      expect(response.status).to eq(302)
+      expect(response.header.fetch('Location')).to eq('http://www.example.com/users/sign_in')
+    end
+
+    it "update project successfully" do
+      sign_in_as(user)
+      expect do
+        put "/projects/#{project.id}", params: {
+          project: {
+            name: "Project A",
+            description: "ABC",
+            status: :wip
+          }
+        }
+      end.to change { Project.count }.by(0)
+      project = Project.order(created_at: :desc).first
+      expect(response.status).to eq(302)
+      expect(response.header.fetch('Location')).to eq("http://www.example.com/projects/#{project.id}")
+      expect(project.name).to eq("Project A")
+      expect(project.description).to eq("ABC")
+      expect(project.status).to eq("wip")
+    end
+
+    it "cannot update project with empty name" do
+      sign_in_as(user)
+      expect do
+        put "/projects/#{project.id}", params: {
+          project: {
+            name: "",
+            description: "ABC",
+            status: :pending
+          }
+        }
+      end.to change { Project.count }.by(0)
+      expect(response.status).to eq(422)
+      project = Project.order(created_at: :desc).first
+      expect(project.name).to eq("Example")
+    end
+  end
 end
